@@ -11,6 +11,6 @@ import lombok.Setter;
 @Builder
 public class AuthResponse {
     private String jwt;
-    private final String tokenType = "Bearer";
+    private String tokenType;
     private Date expirationDate;
 }

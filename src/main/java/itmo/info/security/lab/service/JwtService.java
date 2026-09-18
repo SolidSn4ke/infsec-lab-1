@@ -21,6 +21,8 @@ public class JwtService {
 
     private @Getter long jwtExpirationMs = 30L * 24 * 60 * 60 * 1000;
 
+    final static String TOKEN_TYPE = "Bearer";
+
     public String generateToken(String sub) {
         return Jwts.builder().subject(sub).issuedAt(new Date())
                 .expiration(new Date(new Date().getTime() + jwtExpirationMs)).signWith(getSigningKey()).compact();

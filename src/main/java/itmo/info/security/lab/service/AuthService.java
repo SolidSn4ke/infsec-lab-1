@@ -35,6 +35,7 @@ public class AuthService {
                     .jwt(jwtService.generateToken(user.getLogin()))
                     .expirationDate(
                             new Date(new Date().getTime() + jwtService.getJwtExpirationMs()))
+                    .tokenType(JwtService.TOKEN_TYPE)
                     .build();
         } else
             throw new ForbiddenException("Wrong password");
@@ -50,6 +51,7 @@ public class AuthService {
                 .jwt(jwtService.generateToken(user.getLogin()))
                 .expirationDate(
                         new Date(new Date().getTime() + jwtService.getJwtExpirationMs()))
+                .tokenType(JwtService.TOKEN_TYPE)
                 .build();
     }
 
