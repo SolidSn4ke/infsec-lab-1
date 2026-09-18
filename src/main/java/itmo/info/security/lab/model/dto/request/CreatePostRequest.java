@@ -1,20 +1,13 @@
-package itmo.info.security.lab.model.dto;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
+package itmo.info.security.lab.model.dto.request;
 
 import org.springframework.web.util.HtmlUtils;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-public class PostDTO {
-    private @Setter UUID uuid;
+public class CreatePostRequest {
     private String title;
     private String body;
-    private @Setter LocalDateTime createdAt;
-    private @Setter String postedBy;
 
     public void setTitle(String title) {
         this.title = title == null ? null : HtmlUtils.htmlEscape(title);

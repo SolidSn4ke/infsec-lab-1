@@ -3,7 +3,8 @@ package itmo.info.security.lab.rest.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import itmo.info.security.lab.model.dto.UserLoginRequest;
+import itmo.info.security.lab.model.dto.request.UserLoginRequest;
+import itmo.info.security.lab.model.dto.response.AuthResponse;
 import itmo.info.security.lab.service.AuthService;
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +19,8 @@ public class AuthController {
     final AuthService authService;
 
     @PostMapping("/login")
-    public String login(@RequestBody UserLoginRequest request) {
+    public AuthResponse login(@RequestBody UserLoginRequest request) {
+        authService.validateUserLoginRequest(request);
         if (authService.checkIfPresent(request.getLogin())) {
             return authService.login(request);
         } else

@@ -11,6 +11,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 
 @Service
 public class JwtService {
@@ -18,7 +19,7 @@ public class JwtService {
     @Value("${jwt.secret.key}")
     private String jwtSecret;
 
-    private long jwtExpirationMs = 30L * 24 * 60 * 60 * 1000;
+    private @Getter long jwtExpirationMs = 30L * 24 * 60 * 60 * 1000;
 
     public String generateToken(String sub) {
         return Jwts.builder().subject(sub).issuedAt(new Date())

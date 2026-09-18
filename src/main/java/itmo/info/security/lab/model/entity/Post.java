@@ -26,6 +26,7 @@ public class Post {
     @Column(length = 128, nullable = false)
     private String title;
 
+    @Column(length = 1024)
     private String body;
 
     @CreationTimestamp

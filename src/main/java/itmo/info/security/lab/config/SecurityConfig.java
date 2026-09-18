@@ -7,8 +7,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
-
 import itmo.info.security.lab.rest.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 
@@ -25,13 +23,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/error").permitAll()
                                 .anyRequest().authenticated())
-                .headers(headers -> headers
-                        .xssProtection(
-                                xss -> xss.headerValue(HeaderValue.ENABLED_MODE_BLOCK))
-                        .contentSecurityPolicy(
-                                csp -> csp.policyDirectives("script-src 'self'")))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

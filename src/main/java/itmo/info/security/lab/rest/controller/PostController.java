@@ -3,9 +3,9 @@ package itmo.info.security.lab.rest.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import itmo.info.security.lab.exception.ForbiddenException;
-import itmo.info.security.lab.model.dto.CreatePostRequest;
 import itmo.info.security.lab.model.dto.PageInfo;
 import itmo.info.security.lab.model.dto.PostDTO;
+import itmo.info.security.lab.model.dto.request.CreatePostRequest;
 import itmo.info.security.lab.service.PostService;
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package itmo.info.security.lab.model.dto;
+package itmo.info.security.lab.model.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
