@@ -38,7 +38,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String jwt = authHeader.substring(BEARER.length());
 
         if (!jwtService.verify(jwt)) {
-            throw new ForbiddenException("Jwt token is invalid");
+            filterChain.doFilter(request, response);
+            return;
         }
 
         String sub = jwtService.extractSub(jwt);
