@@ -6,6 +6,15 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +33,62 @@ jobs:
       run: ./mvnw clean compile
 
     - name: Run SpotBugs
-      run: ./mvnw spotbugs:check
+      run: ./mvnw spotbugs:spotbugs -Dspotbugs.outputFormat=html
 
     - name: Run OWASP Dependency-Check
       run: ./mvnw dependency-check:check -Dnvd.api.key=${{ secrets.NVD_API_KEY }}
+
+    - name: Prepare report site
+      run: |
+        mkdir -p site/spotbugs site/dependency-check
+        cp target/spotbugs.html site/spotbugs/index.html || echo "SpotBugs report not found"
+        cp target/dependency-check-report.html site/dependency-check/index.html || echo "DC report not found"
+
+        cat > site/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="ru">
+        <head>
+          <meta charset="utf-8">
+          <title>Security Reports</title>
+          <style>
+            body { font-family: system-ui, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; }
+            h1 { border-bottom: 2px solid #eee; padding-bottom: 8px; }
+            li { margin: 8px 0; font-size: 1.1em; }
+            a { color: #0366d6; text-decoration: none; }
+            a:hover { text-decoration: underline; }
+          </style>
+        </head>
+        <body>
+          <h1>Security Reports</h1>
+          <ul>
+            <li><a href="spotbugs/">SpotBugs Report</a></li>
+            <li><a href="dependency-check/">OWASP Dependency-Check Report</a></li>
+          </ul>
+        </body>
+        </html>
+        EOF
+
+    - name: Upload reports as artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-reports
+        path: site/
+
+    - name: Upload Pages artifact
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./site
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
