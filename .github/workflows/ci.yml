@@ -41,7 +41,7 @@ jobs:
     - name: Prepare report site
       run: |
         mkdir -p site/spotbugs site/dependency-check
-        cp target/spotbugs.html site/spotbugs/index.html || echo "SpotBugs report not found"
+        cp target/reports/spotbugs.html site/spotbugs/index.html || echo "SpotBugs report not found"
         cp target/dependency-check-report.html site/dependency-check/index.html || echo "DC report not found"
 
         cat > site/index.html << 'EOF'
